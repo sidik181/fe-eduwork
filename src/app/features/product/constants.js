@@ -4,7 +4,6 @@ export const SUCCESS_FETCHING_PRODUCT = 'features/product/SUCCESS_FETCHING_PRODU
 export const SET_PAGE = 'features/product/SET_PAGE';
 export const NEXT_PAGE = 'features/product/NEXT_PAGE';
 export const PREV_PAGE = 'features/product/PREV_PAGE';
-export const SELECTED_PRODUCT = 'features/product/SELECTED_PRODUCT';
 export const SET_CATEGORY = 'features/product/SET_CATEGORY';
 export const TOGGLE_TAGS = 'features/product/TOGGLE_TAGS';
 export const SET_KEYWORD = 'features/product/SET_KEYWORD';

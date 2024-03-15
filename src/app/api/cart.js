@@ -3,21 +3,31 @@ import axios from 'axios'
 const API_URL = import.meta.env.VITE_API_URL
 
 export const getCarts = async () => {
-    return await axios.get(`${API_URL}/api/carts`)
+    const { token } = localStorage.getItem('auth') ? JSON.parse(localStorage.getItem('auth')) : {};
+
+    return await axios.get(`${API_URL}/api/carts`, { headers: { Authorization: `Bearer ${token}` } })
 }
 
 export const getCartById = async (idCart) => {
-    return await axios.get(`${API_URL}/api/cart/${idCart}`)
+    const { token } = localStorage.getItem('auth') ? JSON.parse(localStorage.getItem('auth')) : {};
+
+    return await axios.get(`${API_URL}/api/cart/${idCart}`, { headers: { Authorization: `Bearer ${token}` } })
 }
 
-export const addCart = async () => {
-    return await axios.post(`${API_URL}/api/cart`)
+export const addCart = async data => {
+    const { token } = localStorage.getItem('auth') ? JSON.parse(localStorage.getItem('auth')) : {};
+
+    return await axios.post(`${API_URL}/api/cart`, data, { headers: { Authorization: `Bearer ${token}` } })
 }
 
-export const editCart = async (idCart) => {
-    return await axios.put(`${API_URL}/api/cart/${idCart}`)
+export const editCart = async (idCart, data) => {
+    const { token } = localStorage.getItem('auth') ? JSON.parse(localStorage.getItem('auth')) : {};
+
+    return await axios.put(`${API_URL}/api/cart/${idCart}`, data, { headers: { Authorization: `Bearer ${token}` } } )
 }
 
 export const deleteCart = async (idCart) => {
-    return await axios.delete(`${API_URL}/api/cart/${idCart}`)
+    const { token } = localStorage.getItem('auth') ? JSON.parse(localStorage.getItem('auth')) : {};
+
+    return await axios.delete(`${API_URL}/api/cart/${idCart}`, { headers: { Authorization: `Bearer ${token}` } })
 }

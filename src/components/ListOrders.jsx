@@ -1,13 +1,36 @@
 import { ArrowDownIcon } from '@heroicons/react/24/outline'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { getOrders } from '../app/api/order'
+import { setLoading, unsetLoading } from '../app/features/loading/actions'
 
 export const ListOrders = () => {
+    const dispatch = useDispatch()
+
+    const loading = useSelector(state => state.loading)
+    const [orders, setOrders] = useState([])
+
     const [detailOrder, setDetailOrder] = useState(false)
 
     const toggleDetailOrder = () => {
-        setDetailOrder(!detailOrder);
-    };
+        setDetailOrder(!detailOrder)
+    }
 
+    const fetchOrders = async () => {
+        try {
+            dispatch(setLoading())
+            const { data } = await getOrders()
+            setOrders(data);
+        } catch (err) {
+            console.error(`Error fetching orders, ${err}`)
+        } finally {
+            dispatch(unsetLoading())
+        }
+    }
+
+    useEffect(() => {
+        fetchOrders()
+    },[])
     return (
         <div className="text-black w-full mb-3 mt-2 mr-4">
             <table className="min-w-full divide-gray-200">
@@ -25,17 +48,29 @@ export const ListOrders = () => {
                     </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200 text-center">
-                    <tr className="border-b">
-                        <td onClick={toggleDetailOrder} className="py-2 hover:bg-gray-300 px-4 flex justify-end align-middle items-center">
-                            <ArrowDownIcon className={detailOrder ? 'w-5 transition duration-100' : 'w-5 transition duration-100 rotate-180'}></ArrowDownIcon>
-                        </td>
-                        <td className="py-2 px-4">#1</td>
-                        <td className="py-2 px-4">Rp 45.000</td>
-                        <td className="py-2 px-4">Menunggu Pembayaran</td>
-                        <td className="py-2 px-4">
-                            <span className="bg-blue-700 px-3 py-1 rounded-md text-white cursor-pointer">Invoice</span>
-                        </td>
-                    </tr>
+                    {loading ? (
+                        <tr>
+                            <td colSpan="5" className="py-2 px-4 border-b-2 text-center">Mengambil data ....</td>
+                        </tr>
+                    ) :
+                        orders.length > 0 ?
+                            orders.map((order, index) => (
+                                <tr key={index} >
+                                    <td onClick={toggleDetailOrder} className="py-2 hover:bg-gray-300 px-4 flex justify-end align-middle items-center">
+                                        <ArrowDownIcon className={detailOrder ? 'w-5 transition duration-100' : 'w-5 transition duration-100 rotate-180'}></ArrowDownIcon>
+                                    </td>
+                                    <td className="py-2 px-4 border">{`#${index + 1}`}</td>
+                                    <td className="py-2 px-4 border">{order.name}</td>
+                                    <td className="py-2 px-4 border">{order.status}</td>
+                                    <td className="py-2 px-4">
+                                        <span className="bg-blue-700 px-3 py-1 rounded-md text-white cursor-pointer">Invoice</span>
+                                    </td>
+                                </tr>
+                            )) :
+                            <tr>
+                                <td colSpan="5" className="py-2 px-4 border-b-2 text-center">Tidak ada order</td>
+                            </tr>
+                    }
                 </tbody>
             </table>
             <table className={detailOrder ? "min-w-full divide-gray-200 table-fixed mt-1" : "hidden"}>

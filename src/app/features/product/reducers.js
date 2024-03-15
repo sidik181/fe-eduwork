@@ -7,12 +7,11 @@ import {
     START_FETCHING_PRODUCT,
     SUCCESS_FETCHING_PRODUCT,
     TOGGLE_TAGS,
-    SELECTED_PRODUCT
 } from "./constants"
 
 const statusList = {
     idle: 'idle',
-    process: 'process',
+    process: 'proccess',
     success: 'success',
     error: 'error'
 }
@@ -26,7 +25,6 @@ const initialState = {
     category: '',
     tags: [],
     status: statusList.idle,
-    selectedProduct: {}
 }
 
 export default function productReducer(state = initialState, { type, payload }) {
@@ -39,8 +37,6 @@ export default function productReducer(state = initialState, { type, payload }) 
             return { ...state, status: statusList.success, data: payload.data, totalItems: payload.count }
         case SET_PAGE:
             return { ...state, currentPage: payload.currentPage }
-        case SELECTED_PRODUCT:
-            return { ...state, selectedProduct: payload.selectedProduct }
         case NEXT_PAGE:
             return { ...state, currentPage: state.currentPage + 1 }
         case PREV_PAGE:

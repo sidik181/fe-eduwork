@@ -6,7 +6,7 @@ export const Card = ({ product, auth }) => {
     return (
         <div className="group relative">
             <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
-                <img src={product.image} alt={product.name} className="h-full w-full object-cover object-center lg:h-full lg:w-full" />
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNSgpp2qhJYt_UKXsy4Dsctl3K_1TTr84XuA&usqp=CAU" alt={product.name} className="h-full w-full object-cover object-center lg:h-full lg:w-full" />
             </div>
             <div className="mt-4 flex justify-between">
                 <div className="text-left">
@@ -23,8 +23,8 @@ export const Card = ({ product, auth }) => {
                 </div>
                 <p className="text-xl font-medium text-gray-700">{formatPrice(product.price)}</p>
             </div>
-            <button className={`${auth.isAuthenticated ? 'bg-blue-300' : 'bg-gray-300 cursor-not-allowed'} h-10 w-full rounded-md mt-2 flex justify-center items-center`}>
-                <ShoppingCartIcon className="h-7 w-7" />
+            <button className={`${auth ? 'bg-blue-800' : 'bg-gray-300 cursor-not-allowed'} h-10 w-full rounded-md mt-2 flex justify-center items-center`}>
+                <ShoppingCartIcon className="h-7 w-7 text-white" />
             </button>
         </div>
     )
@@ -41,6 +41,5 @@ Card.propTypes = {
     }).isRequired,
     auth: PropTypes.shape({
         auth: PropTypes.object,
-        isAuthenticated: PropTypes.bool
-    }).isRequired
+    })
 };

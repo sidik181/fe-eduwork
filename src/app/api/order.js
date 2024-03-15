@@ -3,9 +3,13 @@ import axios from 'axios'
 const API_URL = import.meta.env.VITE_API_URL
 
 export const getOrders = async () => {
-    return await axios.get(`${API_URL}/api/orders`)
+    const { token } = localStorage.getItem('auth') ? JSON.parse(localStorage.getItem('auth')) : {};
+
+    return await axios.get(`${API_URL}/api/orders`, { headers: { Authorization: `Bearer ${token}` } })
 }
 
-export const addOrder = async () => {
-    return await axios.get(`${API_URL}/api/order`)
+export const addOrder = async data => {
+    const { token } = localStorage.getItem('auth') ? JSON.parse(localStorage.getItem('auth')) : {};
+    
+    return await axios.get(`${API_URL}/api/order`, data, { headers: { Authorization: `Bearer ${token}` } })
 }

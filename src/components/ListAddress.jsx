@@ -27,7 +27,7 @@ export const ListAddress = () => {
 
             if (result.isConfirmed) {
                 await deleteDeliveryAddress(idDeliveryAddress);
-                toast.success(`Tag ${name} berhasil dihapus`)
+                toast.success(`Alamat ${name} berhasil dihapus`)
                 fetchTags()
             }
         } catch (err) {
@@ -41,7 +41,7 @@ export const ListAddress = () => {
         try {
             dispatch(setLoading())
             let { data } = await getDeliveryAddresses()
-            setAddresses(data)
+            setAddresses(data.data)
         } catch (err) {
             console.error('Error fetch delivery address:', err);
         } finally {
@@ -64,33 +64,35 @@ export const ListAddress = () => {
                         <th className="py-2 px-4 border">No</th>
                         <th className="py-2 px-4 border">Nama Alamat</th>
                         <th className="py-2 px-4 border">Detail Alamat</th>
+                        <th className="py-2 px-4 border">Alamat Lengkap</th>
                         <th className="py-2 px-4 border">Aksi</th>
                     </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200 text-left">
                     {loading ? (
                         <tr>
-                            <td colSpan="4" className="py-2 px-4 border-b-2 text-center">Mengambil data ....</td>
+                            <td colSpan="5" className="py-2 px-4 border-b-2 text-center">Mengambil data ....</td>
                         </tr>
                     ) :
                         addresses.length > 0 ?
                             addresses.map((address, index) => (
                                 <tr key={index} >
                                     <td className="py-2 px-4 border">{index + 1}</td>
-                                    <td className="py-2 px-4 border">{address.name}</td>
-                                    <td className="py-2 px-4 border"></td>
+                                    <td className="py-2 px-4 border">{address.nama_alamat_pengiriman}</td>
+                                    <td className="py-2 px-4 border">{address.detail}</td>
+                                    <td className="py-2 px-4 border">{`${address.nama_jalan}, Kelurahan ${address.kelurahan}, Kecamatan ${address.kecamatan}, Kota/Kab ${address.kabupaten_kota}, Provinsi ${address.provinsi}`}</td>
                                     <td className="py-2 px-4 border">
                                         <div className="justify-center flex gap-2">
                                             <Link to={'/account/edit-address'}>
                                                 <button className="bg-blue-700 px-3 py-1 rounded-md text-white">Edit</button>
                                             </Link>
-                                            <button onClick={() => handleDeleteAddress(address._id, address.name)} className="bg-red-700 px-3 py-1 rounded-md text-white">Hapus</button>
+                                            <button onClick={() => handleDeleteAddress(address._id, address.name_alamat_pengiriman)} className="bg-red-700 px-3 py-1 rounded-md text-white">Hapus</button>
                                         </div>
                                     </td>
                                 </tr>
                             )) :
                             <tr>
-                                <td colSpan="6" className="py-2 px-4 border-b-2 text-center">Tidak ada alamat</td>
+                                <td colSpan="5" className="py-2 px-4 border-b-2 text-center">Tidak ada alamat</td>
                             </tr>
                     }
                 </tbody>

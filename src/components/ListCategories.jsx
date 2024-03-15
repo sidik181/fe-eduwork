@@ -76,7 +76,7 @@ export const ListCategories = () => {
                 <tbody className="bg-white divide-y divide-gray-200 text-center">
                     {loading ? (
                         <tr>
-                            <td colSpan="6" className="py-2 px-4 border-b-2">Mengambil data ...</td>
+                            <td colSpan="3" className="py-2 px-4 border-b-2">Mengambil data ...</td>
                         </tr>
                     ) :
                         categories.length > 0 ?
@@ -93,7 +93,7 @@ export const ListCategories = () => {
                                 </tr>
                             )) :
                             <tr>
-                                <td colSpan="6" className="py-2 px-4 border-b-2">Tidak ada kategori</td>
+                                <td colSpan="3" className="py-2 px-4 border-b-2">Tidak ada kategori</td>
                             </tr>
                     }
                 </tbody>

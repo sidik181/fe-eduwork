@@ -10,8 +10,11 @@ import { TagCard } from "../components/TagCard";
 
 export function Home() {
     const products = useSelector(state => state.products.data)
+    const status = useSelector(state => state.products.status)
     const product = useSelector(state => state.products)
-    const auth = useSelector(state => state.auth);
+    const auth = useSelector(state => state.auth.user)
+
+    console.log(status)
 
     const [tags, setTags] = useState([])
     const [categories, setCategories] = useState([])
@@ -46,9 +49,16 @@ export function Home() {
                         <TagCard onClick={tag => dispatch(toggleTags(tag))} tags={tags} />
                     </div>
                     <div className="mt-3 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-                        {products.map((product, index) => (
+                        {status === 'proccess' ? (
+                            <span className="text-black text-md">Mengambil data ...</span>
+                        ) :
+                            products.length > 0 ?
+                                products.map((product, index) => (
                             <Card key={index} product={product} auth={auth} />
-                        ))}
+                                )) :
+                                <span className="text-black text-md">Tidak ada produk</span>
+                        }
+                        {status === 'error' && <span className="text-black text-md">Gagal mengambil data. Silakan refresh kembali browser anda</span>}
                     </div>
                 </div>
             </div>

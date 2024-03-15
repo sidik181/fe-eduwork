@@ -151,14 +151,15 @@ export const AddAddress = () => {
                                 name="provinsi"
                                 placeholder="Pilih Provinsi"
                                 onChange={(e) => {
-                                    handleChange(e);
-                                    const selectedId = e.target.value;
+                                    handleChange(e)
+                                    const selectedOption = e.target.selectedOptions[0];
+                                    const selectedId = selectedOption.getAttribute('data-id');
                                     fetchCities(selectedId)
                                 }}
                             >
                                 <option disabled value="">Pilih Provinsi</option>
                                 {provinces?.map((province, i) => (
-                                    <option key={province.id} value={province.id}>{province.name}</option>
+                                    <option key={province.id} data-id={province.id} value={province.name}>{province.name}</option>
                                 ))}
                             </SelectInput>
                             <SelectInput
@@ -166,15 +167,16 @@ export const AddAddress = () => {
                                 name="kabupaten_kota"
                                 placeholder="Pilih Kabupaten/Kota"
                                 onChange={(e) => {
-                                    handleChange(e);
-                                    const selectedId = e.target.value;
+                                    handleChange(e)
+                                    const selectedOption = e.target.selectedOptions[0];
+                                    const selectedId = selectedOption.getAttribute('data-id');
                                     fetchDistricts(selectedId)
                                 }}
                                 disabled={!values.provinsi}
                             >
                                 <option disabled value="">Pilih Kabupaten/Kota</option>
                                 {cities?.map((city, i) => (
-                                    <option key={city.id} value={city.id}>{city.name}</option>
+                                    <option key={city.id} data-id={city.id} value={city.name}>{city.name}</option>
                                 ))}
                             </SelectInput>
                             <SelectInput
@@ -182,15 +184,16 @@ export const AddAddress = () => {
                                 name="kecamatan"
                                 placeholder="Pilih Kecamatan"
                                 onChange={(e) => {
-                                    handleChange(e);
-                                    const selectedId = e.target.value;
+                                    handleChange(e)
+                                    const selectedOption = e.target.selectedOptions[0];
+                                    const selectedId = selectedOption.getAttribute('data-id');
                                     fetchSubDistricts(selectedId)
                                 }}
                                 disabled={!values.kabupaten_kota}
                             >
                                 <option disabled value="">Pilih Kecamatan</option>
                                 {districts?.map((district, i) => (
-                                    <option key={district.id} value={district.id}>{district.name}</option>
+                                    <option key={district.id} data-id={district.id} value={district.name}>{district.name}</option>
                                 ))}
                             </SelectInput>
                             <SelectInput
@@ -201,7 +204,7 @@ export const AddAddress = () => {
                             >
                                 <option disabled value="">Pilih Kelurahan/Desa</option>
                                 {subDistricts?.map((subDistrict, i) => (
-                                    <option key={subDistrict.id} value={subDistrict.id}>{subDistrict.name}</option>
+                                    <option key={subDistrict.id} value={subDistrict.name}>{subDistrict.name}</option>
                                 ))}
                             </SelectInput>
                         </div>

@@ -1,5 +1,5 @@
 import { getProducts } from "../../api/product";
-import { ERROR_FETCHING_PRODUCT, SELECTED_PRODUCT, SET_CATEGORY, SET_KEYWORD, SET_PAGE, START_FETCHING_PRODUCT, SUCCESS_FETCHING_PRODUCT, TOGGLE_TAGS } from "./constants";
+import { ERROR_FETCHING_PRODUCT, SET_CATEGORY, SET_KEYWORD, SET_PAGE, START_FETCHING_PRODUCT, SUCCESS_FETCHING_PRODUCT, TOGGLE_TAGS } from "./constants";
 import debounce from 'debounce-promise';
 
 export const startFetchingProduct = () => ({
@@ -68,12 +68,5 @@ export const setKeyword = keyword => ({
     type: SET_KEYWORD,
     payload: {
         keyword: keyword
-    }
-})
-
-export const setProduct = data => ({
-    type: SELECTED_PRODUCT,
-    payload: {
-        selectedProduct: data
     }
 })

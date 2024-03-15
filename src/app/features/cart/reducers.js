@@ -1,21 +1,39 @@
-import { START_FETCHING_PRODUCT } from "../product/constants"
+import { ADD_TO_CART, REMOVE_FROM_CART, UPDATE_QUANTITY } from './constants'
 
 const initialState = {
-    data: [],
-    currentPage: 1,
-    totalItems: -1,
-    perPage: 8,
-    keyword: '',
-    category: '',
-    tags: [],
-    selectedProduct: {}
-}
+    items: [],
+    count: 0
+};
 
-export default function cartReducer(state = initialState, { type, payload }) {
+function cartReducer(state = initialState, { type, payload }) {
+    let newItems
     switch (type) {
-        case START_FETCHING_PRODUCT:
-            return { ...state, }
+        case ADD_TO_CART:
+            newItems = [...state.items, payload];
+            return {
+                ...state,
+                items: newItems,
+                count: newItems.reduce((total, item) => total + item.quantity, 0)
+            };
+        case REMOVE_FROM_CART:
+            newItems = state.items.filter(item => item.id !== payload.id);
+            return {
+                ...state,
+                items: newItems,
+                count: newItems.reduce((total, item) => total + item.quantity, 0)
+            };
+        case UPDATE_QUANTITY:
+            newItems = state.items.map(item =>
+                item.id === payload.id ? { ...item, quantity: payload.quantity } : item
+            );
+            return {
+                ...state,
+                items: newItems,
+                count: newItems.reduce((total, item) => total + item.quantity, 0)
+            };
         default:
-            return state
+            return state;
     }
 }
+
+export default cartReducer;

@@ -22,7 +22,7 @@ export const AddProduct = () => {
     const initialValues = {
         product_name: '',
         description: '',
-        price: 0,
+        price: null,
         image: '',
         category: '',
         tags: [],

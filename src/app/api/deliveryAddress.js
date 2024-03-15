@@ -5,11 +5,7 @@ const API_URL = import.meta.env.VITE_API_URL
 export const getDeliveryAddresses = async () => {
     const { token } = localStorage.getItem('auth') ? JSON.parse(localStorage.getItem('auth')) : {};
 
-    return await axios.get(`${API_URL}/api/delivery-addresses?limit=`, {
-        headers: {
-            authorization: `Bearer ${token}`
-        }
-    })
+    return await axios.get(`${API_URL}/api/delivery-addresses?limit=`, { headers: { Authorization: `Bearer ${token}` } })
 }
 
 export const getDeliveryAddressById = async idDeliveryAddress => {
@@ -18,8 +14,10 @@ export const getDeliveryAddressById = async idDeliveryAddress => {
     return await axios.get(`${API_URL}/api/delivery-address/${idDeliveryAddress}`, { headers: { Authorization: `Bearer ${token}` } })
 }
 
-export const addDeliveryAddress = async () => {
-    return await axios.post(`${API_URL}/api/delivery-address`)
+export const addDeliveryAddress = async data => {
+    const { token } = localStorage.getItem('auth') ? JSON.parse(localStorage.getItem('auth')) : {};
+
+    return await axios.post(`${API_URL}/api/delivery-address`, data, { headers: { Authorization: `Bearer ${token}` } })
 }
 
 export const editDeliveryAddress = async (idDeliveryAddress, data) => {
