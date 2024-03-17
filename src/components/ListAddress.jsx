@@ -40,7 +40,7 @@ export const ListAddress = () => {
     const fetchTags = async () => {
         try {
             dispatch(setLoading())
-            let { data } = await getDeliveryAddresses()
+            const { data } = await getDeliveryAddresses()
             setAddresses(data.data)
         } catch (err) {
             console.error('Error fetch delivery address:', err);

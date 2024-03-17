@@ -7,14 +7,18 @@ import { getCategories } from "../app/api/category";
 import { getTagsByCategory } from "../app/api/tag";
 import { SearchBar } from "../components/SearchBar";
 import { TagCard } from "../components/TagCard";
+import { addProductToCart, updateQuantityProductToCart } from "../app/features/cart/actions"
+import { ToastContainer, toast } from "react-toastify";
+import { addCart, getCarts } from "../app/api/cart";
 
 export function Home() {
     const products = useSelector(state => state.products.data)
     const status = useSelector(state => state.products.status)
     const product = useSelector(state => state.products)
     const auth = useSelector(state => state.auth.user)
+    const cart = useSelector(state => state.cart)
 
-    console.log(status)
+    console.log(cart)
 
     const [tags, setTags] = useState([])
     const [categories, setCategories] = useState([])
@@ -25,7 +29,42 @@ export function Home() {
         dispatch(setCategory(e.target.value))
     }
 
+    const updateOrAddProductToCart = async selectedProduct => {
+        const qty =  1
+        const itemsToAdd = [
+            {
+                product: {
+                    _id: selectedProduct._id,
+                },
+                qty: qty
+            }
+        ]
+        await addCart({ items: itemsToAdd })
+        const { data } = await getCarts()
+        
+        const cartItems = JSON.parse(localStorage.getItem('cart') || '[]')
+        const existingProductIndex = cartItems.findIndex(item => item.product._id === selectedProduct._id)
+
+        if (existingProductIndex !== -1) {
+            cartItems[existingProductIndex].qty + qty;
+            console.log(cartItems[existingProductIndex].qty + qty)
+            dispatch(updateQuantityProductToCart(selectedProduct._id, cartItems[existingProductIndex].qty))
+            toast.success(`Berhasil menambah jumlah pesanan ${selectedProduct.name} ke keranjang`)
+        } else {
+            dispatch(addProductToCart({ ...selectedProduct, qty: 1 }))
+            toast.success(`${selectedProduct.name} berhasil ditambahkan ke keranjang`)
+        }
+
+        localStorage.setItem('cart', JSON.stringify(data))
+    }
+
     useEffect(() => {
+        const setCartFirst = async () => {
+            const {data} = await getCarts()
+            localStorage.setItem('cart', JSON.stringify(data))
+        }
+        setCartFirst()
+
         dispatch(fetchProducts())
         getCategories()
             .then(({ data }) => setCategories(data))
@@ -36,6 +75,7 @@ export function Home() {
         <>
             <Header />
             <div className="bg-white text-gray-900">
+                <ToastContainer />
                 <div className="mx-auto max-w-2xl px-4 mt-5 pb-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
                     <h1 className="text-2xl font-bold text-left tracking-tight text-gray-900">Daftar Produk</h1>
                     <div className="flex overflow-auto mt-5 items-center">
@@ -54,7 +94,7 @@ export function Home() {
                         ) :
                             products.length > 0 ?
                                 products.map((product, index) => (
-                            <Card key={index} product={product} auth={auth} />
+                                    <Card key={index} product={product} updateOrAddProductToCart={() => updateOrAddProductToCart(product)} auth={auth} />
                                 )) :
                                 <span className="text-black text-md">Tidak ada produk</span>
                         }

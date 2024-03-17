@@ -1,36 +1,30 @@
-import { ADD_TO_CART, REMOVE_FROM_CART, UPDATE_QUANTITY } from './constants'
+import { ADD_PRODUCT_TO_CART, REMOVE_CART_ITEM, UPDATE_PRODUCT_QUANTITY } from './constants'
 
 const initialState = {
-    items: [],
-    count: 0
-};
+    cart: []
+}
 
 function cartReducer(state = initialState, { type, payload }) {
-    let newItems
     switch (type) {
-        case ADD_TO_CART:
-            newItems = [...state.items, payload];
+        case ADD_PRODUCT_TO_CART:
             return {
                 ...state,
-                items: newItems,
-                count: newItems.reduce((total, item) => total + item.quantity, 0)
+                cart: [...state.cart, payload]
             };
-        case REMOVE_FROM_CART:
-            newItems = state.items.filter(item => item.id !== payload.id);
+        case UPDATE_PRODUCT_QUANTITY:
             return {
                 ...state,
-                items: newItems,
-                count: newItems.reduce((total, item) => total + item.quantity, 0)
+                cart: state.cart.map(item =>
+                    item._id === payload.id
+                        ? { ...item, qty: item.qty + 1 }
+                        : item
+                )
             };
-        case UPDATE_QUANTITY:
-            newItems = state.items.map(item =>
-                item.id === payload.id ? { ...item, quantity: payload.quantity } : item
-            );
-            return {
-                ...state,
-                items: newItems,
-                count: newItems.reduce((total, item) => total + item.quantity, 0)
-            };
+        case REMOVE_CART_ITEM: {
+            return state
+                .map(item => ({ ...item, qty: item._id === payload.item._id ? item.qty - 1 : item.qty }))
+                .filter(item => item.qty > 0);
+        }
         default:
             return state;
     }

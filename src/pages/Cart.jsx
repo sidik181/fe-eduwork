@@ -10,7 +10,7 @@ export const Cart = () => {
                     <div className='text-black px-4 py-3 bg-slate-300'>
                         <h1 className="text">Keranjang Belanja</h1>
                     </div>
-                    <div className='overflow-x-auto p-4 flex gap-4'>
+                    <div className='overflow-x-auto p-4 flex items-center justify-center gap-4'>
                         <CartItem />
                     </div>
                 </div>

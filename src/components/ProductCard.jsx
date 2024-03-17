@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { formatPrice } from '../utils';
 import { TagIcon, ShoppingCartIcon } from '@heroicons/react/24/outline';
 
-export const Card = ({ product, auth }) => {
+export const Card = ({ product, auth, updateOrAddProductToCart }) => {
     return (
         <div className="group relative">
             <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
@@ -23,7 +23,7 @@ export const Card = ({ product, auth }) => {
                 </div>
                 <p className="text-xl font-medium text-gray-700">{formatPrice(product.price)}</p>
             </div>
-            <button className={`${auth ? 'bg-blue-800' : 'bg-gray-300 cursor-not-allowed'} h-10 w-full rounded-md mt-2 flex justify-center items-center`}>
+            <button onClick={() => updateOrAddProductToCart(product)} className={`${auth ? 'bg-blue-800' : 'bg-gray-300 cursor-not-allowed'} h-10 w-full rounded-md mt-2 flex justify-center items-center`}>
                 <ShoppingCartIcon className="h-7 w-7 text-white" />
             </button>
         </div>
@@ -41,5 +41,6 @@ Card.propTypes = {
     }).isRequired,
     auth: PropTypes.shape({
         auth: PropTypes.object,
-    })
+    }),
+    updateOrAddProductToCart: PropTypes.func
 };

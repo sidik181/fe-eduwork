@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { logoutUser } from '../app/api/auth'
 import { userLogout } from '../app/features/auth/actions'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 
 export const Header = () => {
@@ -15,7 +15,8 @@ export const Header = () => {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const countCart = useSelector(state => state.cart.count)
+  const cartItems = JSON.parse(localStorage.getItem('cart') || '[]')
+  const totalQtyCart = cartItems.reduce((sum, item) => sum + item.qty, 0)
 
   const toggleAccount = () => {
     setDesktopAccount(!desktopAccount)
@@ -45,7 +46,7 @@ export const Header = () => {
         <div className="text-white md:flex hidden">
           <Link to={'/cart'} className='flex'>
             <ShoppingCartIcon className="cursor-pointer w-6 h-6 mr-1" />
-            <span className='mr-3'>{`(${countCart})`}</span>
+            <span className='mr-3'>{`(${totalQtyCart})`}</span>
           </Link>
           {!auth?.user ?
             <div className='hidden md:block'>

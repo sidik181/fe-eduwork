@@ -1,3 +1,3 @@
-export const ADD_TO_CART = 'features/cart/ADD_TO_CART';
-export const REMOVE_FROM_CART = 'features/cart/REMOVE_FROM_CART';
-export const UPDATE_QUANTITY = 'features/cart/UPDATE_QUANTITY';
+export const ADD_PRODUCT_TO_CART = 'features/cart/ADD_PRODUCT_TO_CART';
+export const REMOVE_CART_ITEM = 'features/cart/REMOVE_CART_ITEM';
+export const UPDATE_PRODUCT_QUANTITY = 'features/cart/UPDATE_PRODUCT__QUANTITY';
