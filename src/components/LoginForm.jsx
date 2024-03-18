@@ -2,10 +2,11 @@ import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import logoURL from "../assets/logo.png"
 import { loginUser } from "../app/api/auth"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { userLogin } from "../app/features/auth/actions"
 import { Formik } from 'formik'
 import * as Yup from 'yup'
+import { setLoading, unsetLoading } from '../app/features/loading/loadingSlice';
 
 export function LoginForm() {
     const initialState = {
@@ -13,14 +14,7 @@ export function LoginForm() {
         password: '',
     }
 
-    const statusList = {
-        idle: 'idle',
-        process: 'process',
-        success: 'success',
-        error: 'error'
-    }
-
-    const [status, setStatus] = useState(statusList.idle)
+    const loading = useSelector(state => state.loading)
     const [errorMessage, setErrorMessage] = useState('')
 
     const dispatch = useDispatch()
@@ -32,11 +26,10 @@ export function LoginForm() {
     })
 
     const onSubmit = async (values, {resetForm}) => {
-        setStatus(statusList.process)
+        dispatch(setLoading())
         const { data } = await loginUser(values)
         if (data.error) {
             setErrorMessage(data.message)
-            setStatus(statusList.error)
         } else {
             const  { token, user } = data
             dispatch(userLogin({ user, token }));
@@ -44,7 +37,7 @@ export function LoginForm() {
             resetForm()
             navigate('/')
         }
-        setStatus(statusList.success)
+        unsetLoading()
     }
     return (
         <div className="flex flex-1 flex-col min-h-full justify-center px-6 py-12 lg:px-8">
@@ -110,10 +103,10 @@ export function LoginForm() {
                                 <div>
                                     <button
                                         type="submit"
-                                        disabled={status === statusList.process}
+                                        disabled={loading}
                                         className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                     >
-                                        {status === statusList.process ? 'Loading...' : 'Login'}
+                                        {loading ? 'Loading...' : 'Login'}
                                     </button>
                                 </div>
                             </form>

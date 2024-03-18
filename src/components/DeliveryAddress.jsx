@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { getDeliveryAddresses } from "../app/api/deliveryAddress"
 import { useDispatch, useSelector } from "react-redux"
-import { setLoading, unsetLoading } from "../app/features/loading/actions"
+import { setLoading, unsetLoading } from "../app/features/loading/loadingSlice"
 
 export const DeliveryAddress = () => {
     const dispatch = useDispatch()

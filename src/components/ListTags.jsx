@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 import { deleteTag, getTags } from '../app/api/tag';
-import { setLoading, unsetLoading } from '../app/features/loading/actions';
+import { setLoading, unsetLoading } from '../app/features/loading/loadingSlice';
 
 export const ListTags = () => {
     const dispatch = useDispatch()

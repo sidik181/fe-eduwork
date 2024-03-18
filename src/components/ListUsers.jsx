@@ -3,7 +3,7 @@ import Swal from 'sweetalert2'
 import { Link } from 'react-router-dom';
 import { deleteUser, getUsers } from '../app/api/user';
 import { useDispatch, useSelector } from 'react-redux';
-import { setLoading, unsetLoading } from '../app/features/loading/actions';
+import { setLoading, unsetLoading } from '../app/features/loading/loadingSlice';
 import { ToastContainer, toast } from 'react-toastify';
 
 export const ListUsers = () => {

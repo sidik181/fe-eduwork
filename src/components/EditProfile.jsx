@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
-import { setLoading, unsetLoading } from '../app/features/loading/actions'
+import { setLoading, unsetLoading } from '../app/features/loading/loadingSlice'
 import { editProfile, getProfile } from '../app/api/auth'
 
 

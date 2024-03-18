@@ -2,7 +2,7 @@ import { ArrowDownIcon } from '@heroicons/react/24/outline'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getOrders } from '../app/api/order'
-import { setLoading, unsetLoading } from '../app/features/loading/actions'
+import { setLoading, unsetLoading } from '../app/features/loading/loadingSlice'
 
 export const ListOrders = () => {
     const dispatch = useDispatch()

@@ -3,7 +3,7 @@ import * as Yup from 'yup'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
-import { setLoading, unsetLoading } from '../app/features/loading/actions'
+import { setLoading, unsetLoading } from '../app/features/loading/loadingSlice'
 import { editTag, getTagById } from '../app/api/tag'
 import { ToastContainer, toast } from 'react-toastify'
 

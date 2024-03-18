@@ -1,4 +1,14 @@
-import { ADD_PRODUCT_TO_CART, REMOVE_CART_ITEM, UPDATE_PRODUCT_QUANTITY } from './constants'
+import { getCarts } from '../../api/cart';
+import { ADD_PRODUCT_TO_CART, SET_CART_DATA, REMOVE_CART_ITEM, UPDATE_PRODUCT_QUANTITY, UPDATE_QUANTITY } from './constants'
+
+export const loadCartFromDatabase = () => async (dispatch) => {
+    try {
+        const cartData = await getCarts()
+        dispatch({ type: SET_CART_DATA, payload: cartData })
+    } catch(err){
+        console.error('Error loading cart data:', err);
+    }
+};
 
 export const addProductToCart = (product) => ({
     type: ADD_PRODUCT_TO_CART,
@@ -10,37 +20,12 @@ export const updateQuantityProductToCart = (id, qty) => ({
     payload: { id, qty }
 });
 
+export const updateQuantity = (id, qty) => ({
+    type: UPDATE_QUANTITY,
+    payload: { id, qty }
+});
+
 export const removeCartItem = (id) => ({
     type: REMOVE_CART_ITEM,
     payload: id,
 });
-
-
-// const { cart: { items } } = getState();
-// const existingProduct = items.find(i => i.product. === payload.product);
-
-// if (existingProduct) {
-//     return {
-//         type: UPDATE_QUANTITY,
-//         payload: { id: payload._id, qty: qty },
-//         operation: 'updateQtyToProduct',
-//     }
-//     const updatedQuantity = existingProduct.qty || qty;
-//     let updatedQuantity
-//     if (existingItem) {
-//         updatedQuantity = 0
-//     } else {
-//         updatedQuantity = existingItem.qty + 1
-//     }
-//     dispatch({
-//         type: UPDATE_QUANTITY,
-//         payload: { id: item._id, qty: updatedQuantity }
-//     });
-// } else {
-//     localStorage.setItem('cart', JSON.stringify(payload))
-//     return {
-//         type: ADD_TO_CART,
-//         payload,
-//         operation: 'addItemToCart',
-//     }
-// }

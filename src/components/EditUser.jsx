@@ -5,7 +5,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { editUser, getUserById } from '../app/api/user'
 import { ToastContainer, toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
-import { setLoading, unsetLoading } from '../app/features/loading/actions'
+import { setLoading, unsetLoading } from '../app/features/loading/loadingSlice'
 import { CustomInput, SelectInput } from './ComponentForm'
 
 

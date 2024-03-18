@@ -4,7 +4,7 @@ import { deleteDeliveryAddress, getDeliveryAddresses } from "../app/api/delivery
 import { useDispatch, useSelector } from "react-redux"
 import Swal from "sweetalert2"
 import { ToastContainer, toast } from "react-toastify"
-import { setLoading, unsetLoading } from "../app/features/loading/actions"
+import { setLoading, unsetLoading } from "../app/features/loading/loadingSlice"
 
 export const ListAddress = () => {
     const dispatch = useDispatch()

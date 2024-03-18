@@ -2,7 +2,7 @@ import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { setLoading, unsetLoading } from '../app/features/loading/actions'
+import { setLoading, unsetLoading } from '../app/features/loading/loadingSlice'
 import { ToastContainer, toast } from 'react-toastify'
 import { addCategory } from '../app/api/category'
 

@@ -1,7 +1,7 @@
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { Link, useNavigate } from 'react-router-dom'
-import { setLoading, unsetLoading } from '../app/features/loading/actions'
+import { setLoading, unsetLoading } from '../app/features/loading/loadingSlice'
 import { addTag } from '../app/api/tag'
 import { ToastContainer, toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'

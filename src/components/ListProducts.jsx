@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { deleteProduct, getProducts } from '../app/api/product';
 import { formatPrice } from '../utils';
 import { useDispatch, useSelector } from 'react-redux';
-import { setLoading, unsetLoading } from '../app/features/loading/actions';
+import { setLoading, unsetLoading } from '../app/features/loading/loadingSlice';
 import { ToastContainer, toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 

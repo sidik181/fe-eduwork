@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { deleteCategory, getCategories } from '../app/api/category';
-import { setLoading, unsetLoading } from '../app/features/loading/actions';
+import { setLoading, unsetLoading } from '../app/features/loading/loadingSlice';
 import Swal from 'sweetalert2';
 import { ToastContainer, toast } from 'react-toastify';
 

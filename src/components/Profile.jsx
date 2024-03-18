@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react"
 import { getProfile } from "../app/api/auth"
 import { useDispatch, useSelector } from "react-redux"
-import { setLoading, unsetLoading } from "../app/features/loading/actions"
 import { Link } from "react-router-dom"
+import { setLoading, unsetLoading } from "../app/features/loading/loadingSlice"
 
 export const Profile = () => {
     const dispatch = useDispatch()

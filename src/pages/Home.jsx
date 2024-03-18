@@ -16,9 +16,6 @@ export function Home() {
     const status = useSelector(state => state.products.status)
     const product = useSelector(state => state.products)
     const auth = useSelector(state => state.auth.user)
-    const cart = useSelector(state => state.cart)
-
-    console.log(cart)
 
     const [tags, setTags] = useState([])
     const [categories, setCategories] = useState([])
@@ -30,41 +27,34 @@ export function Home() {
     }
 
     const updateOrAddProductToCart = async selectedProduct => {
-        const qty =  1
         const itemsToAdd = [
             {
                 product: {
                     _id: selectedProduct._id,
                 },
-                qty: qty
+                qty: 1
             }
         ]
         await addCart({ items: itemsToAdd })
         const { data } = await getCarts()
-        
-        const cartItems = JSON.parse(localStorage.getItem('cart') || '[]')
-        const existingProductIndex = cartItems.findIndex(item => item.product._id === selectedProduct._id)
-
-        if (existingProductIndex !== -1) {
-            cartItems[existingProductIndex].qty + qty;
-            console.log(cartItems[existingProductIndex].qty + qty)
-            dispatch(updateQuantityProductToCart(selectedProduct._id, cartItems[existingProductIndex].qty))
-            toast.success(`Berhasil menambah jumlah pesanan ${selectedProduct.name} ke keranjang`)
-        } else {
-            dispatch(addProductToCart({ ...selectedProduct, qty: 1 }))
-            toast.success(`${selectedProduct.name} berhasil ditambahkan ke keranjang`)
-        }
-
         localStorage.setItem('cart', JSON.stringify(data))
+        
+        // const cartItems = JSON.parse(localStorage.getItem('cart'))
+        // const existingProductIndex = cartItems.findIndex(item => item.product._id === selectedProduct._id)
+
+        // if (existingProductIndex !== -1) {
+        //     let qtyUpdated = cartItems[existingProductIndex].qty + 1;
+        //     dispatch(updateQuantityProductToCart(selectedProduct._id, qtyUpdated))
+        //     toast.success(`Berhasil menambah jumlah pesanan ${selectedProduct.name} ke keranjang`)
+        // } else {
+        //     dispatch(addProductToCart({ ...selectedProduct, qty: 1 }))
+        //     toast.success(`${selectedProduct.name} berhasil ditambahkan ke keranjang`)
+        // }
+
+        
     }
 
     useEffect(() => {
-        const setCartFirst = async () => {
-            const {data} = await getCarts()
-            localStorage.setItem('cart', JSON.stringify(data))
-        }
-        setCartFirst()
-
         dispatch(fetchProducts())
         getCategories()
             .then(({ data }) => setCategories(data))

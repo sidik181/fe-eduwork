@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
 import { editCategory, getCategoryById } from '../app/api/category'
-import { setLoading, unsetLoading } from '../app/features/loading/actions'
+import { setLoading, unsetLoading } from '../app/features/loading/loadingSlice'
 
 
 export const EditCategory = () => {
