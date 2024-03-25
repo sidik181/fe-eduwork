@@ -1,57 +1,56 @@
 import { Link } from "react-router-dom"
 import { formatPrice } from '../utils';
-import { deleteCart, editCart, getCarts } from "../app/api/cart";
 import { useDispatch, useSelector } from "react-redux";
-import { removeCartItem, updateQuantity } from "../app/features/cart/actions";
-import { useEffect, useState } from "react";
+import { updateProductQuantityState } from "../app/features/cart/cartSlice";
+import { deleteCartItem, loadCart, updateCartAsync } from "../app/features/cart/cartService";
+import { ToastContainer, toast } from "react-toastify";
 
 export const CartItem = () => {
     const dispatch = useDispatch();
-    const [products, setProducts] = useState([]);
-    const cartItems =  useSelector(state => state.cart)
-    console.log(cartItems)
+    const cart = useSelector(state => state.cart.items)
 
-    // const cart = useSelector(state => state.cart)
-    // console.log(cart)
+    const subTotal = cart.reduce((sum, item) => sum + item.sub_total, 0);
 
-    // const loadCartData = () => {
-    //     const cartData = JSON.parse(localStorage.getItem('cart') || '[]');
-    //     setProducts(cartData);
-    // };
-
-    // useEffect(() => {
-    //     loadCartData();
-    // }, []);
-
-    // const reloadCartData = async () => {
-    //     await getCarts();
-    //     loadCartData();
-    // };
-
-    const subTotal = products.reduce((sum, item) => sum + item.sub_total, 0);
-
-    const incrementCart = async (productId, qty) => {
-        let qtyUpdated = qty + 1;
-        dispatch(updateQuantity(productId, qtyUpdated));
-        await editCart(productId, qtyUpdated);
-        // await reloadCartData();
+    const incrementCart = async (product) => {
+        let qtyUpdated = product.qty + 1;
+        await dispatch(updateCartAsync({ id: product._id, qty: qtyUpdated })).unwrap()
+            .then(() => {
+                dispatch(updateProductQuantityState({ id: product._id, qty: qtyUpdated }));
+                dispatch(loadCart())
+                toast.success(`Berhasil menambah jumlah pesanan ${product.name}`);
+            })
+            .catch((error) => {
+                toast.error(`Gagal menambah jumlah pesanan ${product.name}. ${error}`);
+            });
     };
 
-    const decrementCart = async (productId, qty) => {
-        let qtyUpdated = Math.max(qty - 1, 1);
-        dispatch(updateQuantity(productId, qtyUpdated));
-        await editCart(productId, qtyUpdated);
-        // await reloadCartData();
+    const decrementCart = async (product) => {
+        let qtyUpdated = Math.max(product.qty - 1, 1);
+        await dispatch(updateCartAsync({ id: product._id, qty: qtyUpdated })).unwrap()
+            .then(() => {
+                dispatch(updateProductQuantityState({ id: product._id, qty: qtyUpdated }));
+                dispatch(loadCart())
+                toast.success(`Berhasil menambah jumlah pesanan ${product.name}`);
+            })
+            .catch((error) => {
+                toast.error(`Gagal menambah jumlah pesanan ${product.name}. ${error}`);
+            });
     };
 
-    const handleRemoveProductFromCart = async productId => {
-        dispatch(removeCartItem(productId));
-        await deleteCart(productId);
-        // await reloadCartData();
+    const handleRemoveProductFromCart = async product => {
+        await dispatch(deleteCartItem({ id: product._id })).unwrap()
+            .then(() => {
+                dispatch(loadCart())
+                toast.success(`Berhasil menghapus product ${product.name} dari keranjang`);
+            })
+            .catch((error) => {
+                toast.error(`Gagal menghapus product ${product.name}. ${error}`);
+            });
     };
 
     return (
         <div className="text-black w-full">
+            <ToastContainer />
             <h1 className="text-xl font-bold">{`Sub Total: ${formatPrice(subTotal)}`}</h1>
             <table className="w-full mt-5 mb-10 text-lg">
                 <thead>
@@ -64,11 +63,11 @@ export const CartItem = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {cartItems.length > 0 ?
-                        cartItems.map((item, index) => (
+                    {cart.length > 0 ?
+                        cart.map((item, index) => (
                             <tr key={index} className="text-center">
                                 <td className="border text-[16px] py-1">
-                                    <button onClick={handleRemoveProductFromCart(item._id)}>Delete</button>
+                                    <button onClick={() => handleRemoveProductFromCart(item)}>Delete</button>
                                 </td>
                                 <td className="border text-[16px] py-1">
                                     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNSgpp2qhJYt_UKXsy4Dsctl3K_1TTr84XuA&usqp=CAU" alt={item.name} />
@@ -76,10 +75,10 @@ export const CartItem = () => {
                                 <td className="border text-[16px] py-1">{item.name}</td>
                                 <td className="border text-[16px] py-1">{formatPrice(item.price)}</td>
                                 <td className="border text-[16px] py-1">
-                                    <button onClick={() => decrementCart(item._id, item.qty)} className="border px-[10px] font-semibold bg-blue-400 text-white cursor-pointer">-</button>
+                                    <button disabled={item.qty === 1} onClick={() => decrementCart(item)} className="border px-[10px] font-semibold bg-blue-400 text-white">-</button>
                                     <span className="text-lg mx-5">{item.qty}</span>
-                                    <button onClick={() => incrementCart(item._id, item.qty)} className="border px-[10px] font-semibold bg-blue-400 text-white cursor-pointer">+</button>
-                                    </td>
+                                    <button onClick={() => incrementCart(item)} className="border px-[10px] font-semibold bg-blue-400 text-white">+</button>
+                                </td>
                             </tr>
                         )) : (
                             <tr>
@@ -94,7 +93,7 @@ export const CartItem = () => {
                 </tbody>
             </table>
             <Link to={'/shipping-address'}>
-                <span className='block bg-blue-600 py-1 text-white rounded-md text-center w-full cursor-pointer'>Checkout</span>
+                <button className='block bg-blue-600 py-1 text-white rounded-md text-center w-full'>Checkout</button>
             </Link>
         </div>
     )

@@ -58,7 +58,7 @@ const AppRoutes = () => {
                 <Route path={'/cart'} element={<Cart />} />
                 <Route path={'/shipping-address'} element={<ShippingAddress />} />
                 <Route path={'/confirm-order'} element={<ConfirmOrders />} />
-                <Route path={'/invoices'} element={<Invoices />} />
+                <Route path={'/invoices/:orderId'} element={<Invoices />} />
             </Route>
             <Route element={<AdminRoute />}>
                 <Route path={'/settings'} element={<SettingsPage />}>

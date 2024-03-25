@@ -121,8 +121,7 @@ export const AddUser = () => {
                                 >
                                     Tambah
                                 </button>
-                            )
-                            }
+                            )}
                         </div>
                     </Form>
                 )}

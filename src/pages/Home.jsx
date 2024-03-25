@@ -7,52 +7,61 @@ import { getCategories } from "../app/api/category";
 import { getTagsByCategory } from "../app/api/tag";
 import { SearchBar } from "../components/SearchBar";
 import { TagCard } from "../components/TagCard";
-import { addProductToCart, updateQuantityProductToCart } from "../app/features/cart/actions"
+import { updateProductQuantityState, addItemState } from "../app/features/cart/cartSlice"
 import { ToastContainer, toast } from "react-toastify";
-import { addCart, getCarts } from "../app/api/cart";
+import { addItemToCart, loadCart, updateCartAsync } from "../app/features/cart/cartService";
 
 export function Home() {
     const products = useSelector(state => state.products.data)
     const status = useSelector(state => state.products.status)
     const product = useSelector(state => state.products)
     const auth = useSelector(state => state.auth.user)
+    const cart = useSelector(state => state.cart.items)
+
+    const dispatch = useDispatch()
 
     const [tags, setTags] = useState([])
     const [categories, setCategories] = useState([])
-
-    const dispatch = useDispatch()
 
     const handleCategoryChange = e => {
         dispatch(setCategory(e.target.value))
     }
 
     const updateOrAddProductToCart = async selectedProduct => {
-        const itemsToAdd = [
-            {
-                product: {
-                    _id: selectedProduct._id,
-                },
-                qty: 1
-            }
-        ]
-        await addCart({ items: itemsToAdd })
-        const { data } = await getCarts()
-        localStorage.setItem('cart', JSON.stringify(data))
-        
-        // const cartItems = JSON.parse(localStorage.getItem('cart'))
-        // const existingProductIndex = cartItems.findIndex(item => item.product._id === selectedProduct._id)
+        const existingCartItem = cart.find(item => item.product._id === selectedProduct._id);
 
-        // if (existingProductIndex !== -1) {
-        //     let qtyUpdated = cartItems[existingProductIndex].qty + 1;
-        //     dispatch(updateQuantityProductToCart(selectedProduct._id, qtyUpdated))
-        //     toast.success(`Berhasil menambah jumlah pesanan ${selectedProduct.name} ke keranjang`)
-        // } else {
-        //     dispatch(addProductToCart({ ...selectedProduct, qty: 1 }))
-        //     toast.success(`${selectedProduct.name} berhasil ditambahkan ke keranjang`)
-        // }
+        if (existingCartItem) {
+            let qtyUpdated = existingCartItem.qty + 1;
+            await dispatch(updateCartAsync({ id: existingCartItem._id, qty: qtyUpdated })).unwrap()
+                .then(() => {
+                    dispatch(updateProductQuantityState({ id: existingCartItem._id, qty: qtyUpdated }));
+                    dispatch(loadCart())
+                    toast.success(`Berhasil menambah jumlah pesanan ${selectedProduct.name} ke keranjang`);
+                })
+                .catch((error) => {
+                    toast.error(`Gagal menambah jumlah pesanan ${selectedProduct.name}. ${error}`);
+                });
+        } else {
+            const itemsToAdd = [
+                {
+                    product: {
+                        _id: selectedProduct._id,
+                    },
+                    qty: 1
+                }
+            ]
 
-        
-    }
+            await dispatch(addItemToCart({ items: itemsToAdd })).unwrap()
+                .then(() => {
+                    dispatch(addItemState({ itemsToAdd }));
+                    dispatch(loadCart())
+                    toast.success(`${selectedProduct.name} berhasil ditambahkan ke keranjang`);
+                })
+                .catch((error) => {
+                    toast.error(`Gagal menambahkan ${selectedProduct.name} ke keranjang. ${error}`);
+                });
+        }
+    };
 
     useEffect(() => {
         dispatch(fetchProducts())

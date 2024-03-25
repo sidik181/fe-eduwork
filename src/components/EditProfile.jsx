@@ -21,7 +21,7 @@ export const EditProfile = () => {
     })
 
     const validationSchema = Yup.object().shape({
-        fullname: Yup.string().required('Nama alamat wajib diisi'),
+        fullname: Yup.string().required('Nama lengkap wajib diisi'),
         password: Yup.string().min(6, 'Password minimal 6 karakter').required('Password harus diisi'),
         confirm_password: Yup.string().oneOf([Yup.ref('password'), null], 'Password tidak sama').required('Konfirmasi password harus diisi'),
     })

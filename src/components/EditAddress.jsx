@@ -11,7 +11,7 @@ import { editDeliveryAddress, getDeliveryAddressById } from '../app/api/delivery
 
 
 export const EditAddress = () => {
-    const { idDeliveryAddress } = useParams()
+    const { idAddress } = useParams()
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const loading = useSelector(state => state.loading)
@@ -91,24 +91,21 @@ export const EditAddress = () => {
 
     const fetchDataDeliveryAddress = async () => {
         try {
-            const { data } = await getDeliveryAddressById(idDeliveryAddress)
+            const { data } = await getDeliveryAddressById(idAddress)
             setInitialValues({
-                product_name: data.name,
-                description: data.description,
-                price: data.price,
-                image: '',
-                category: data.category.name,
-                tags: data.tags.map(tag => tag.name)
+                nama_alamat_pengiriman: data.nama_alamat_pengiriman,
+                nama_jalan: data.nama_jalan,
+                detail: data.detail,
             })
         } catch (err) {
-            console.error(`Error fetching data product, ${err}`)
+            console.error(`Error fetching data address, ${err}`)
         }
     }
 
     const onSubmit = async values => {
         try {
             dispatch(setLoading())
-            await editDeliveryAddress(idDeliveryAddress, {
+            await editDeliveryAddress(idAddress, {
                 nama_alamat: values.nama_alamat,
                 detail_alamat: values.detail_alamat,
                 provinsi: values.provinsi,
@@ -116,10 +113,10 @@ export const EditAddress = () => {
                 kecamatan: values.kecamatan,
                 kelurahan: values.kelurahan_desa
             })
-            toast.success(`Berhasil menambahkan alamat pengiriman`)
+            toast.success(`Berhasil mengedit alamat pengiriman`)
             navigate('/account/address')
         } catch (err) {
-            toast.error(`Gagal menambahkan ${err.message}`)
+            toast.error(`Gagal mengedit ${err.message}`)
         } finally {
             dispatch(unsetLoading())
         }
@@ -162,7 +159,7 @@ export const EditAddress = () => {
                                     name="detail_alamat"
                                     type="text-area"
                                     rows="4"
-                                    value={initialValues.detail_alamat || ''}
+                                    value={initialValues.detail || ''}
                                     placeholder="Masukkan deskripsi produk"
                                 />
                             </div>

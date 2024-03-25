@@ -1,41 +1,82 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchCarts } from './cartService';
+import { addItemToCart, deleteCartItem, loadCart, updateCartAsync } from './cartService';
 
-const initialState = {
-    cart: JSON.parse(localStorage.getItem('cart') || '[]')
-};
 
 const cartSlice = createSlice({
     name: 'cart',
-    initialState,
+    initialState: {
+        items: [],
+        status: 'idle'
+    },
     reducers: {
-        setCartData(state, action) {
-            state.cart = action.payload;
+        addItemState(state, action) {
+            state.items.push(action.payload);
         },
-        addProductToCart(state, action) {
-            state.cart.push(action.payload);
-        },
-        updateProductQuantity(state, action) {
-            const index = state.cart.findIndex(item => item._id === action.payload.id);
-            if (index !== -1) {
-                state.cart[index].qty = action.payload.qty;
+        updateProductQuantityState: (state, action) => {
+            const { id, qty } = action.payload;
+            const existingProductIndex = state.items.findIndex(item => item.product._id === id);
+            if (existingProductIndex !== -1) {
+                state.items[existingProductIndex].qty = qty;
             }
         },
-        removeCartItem(state, action) {
-            const index = state.cart.findIndex(item => item._id === action.payload);
-            if (index !== -1) {
-                state.cart.splice(index, 1);
+        updateQuantityState: (state, action) => {
+            const { id, qty } = action.payload;
+            const existingProduct = state.items.find(item => item._id === id);
+            if (existingProduct) {
+                state.existingProduct.qty = qty;
             }
+        },
+        removeItemState(state, action) {
+            const { id } = action.payload;
+            state.items = state.items.filter(item => item._id !== id);
+        },
+        clearCartState(state) {
+            state.items = [];
+            state.status = 'idle';
         },
     },
-    extraReducers : (builder) => {
-        builder.addCase(fetchCarts.fulfilled, (state, action) => {
-            state.cart = action.payload
-            localStorage.setItem('cart', JSON.stringify(action.payload))
-        })
+    extraReducers: (builder) => {
+        builder
+            .addCase(loadCart.fulfilled, (state, action) => {
+                state.items = action.payload
+                state.status = 'succeeded';
+            })
+            .addCase(updateCartAsync.fulfilled, (state) => {
+                state.status = 'succeeded';
+            })
+            .addCase(addItemToCart.fulfilled, (state) => {
+                state.status = 'succeeded';
+            })
+            .addCase(deleteCartItem.fulfilled, (state) => {
+                state.status = 'succeeded';
+            })
+            .addCase(loadCart.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(updateCartAsync.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(addItemToCart.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(deleteCartItem.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(loadCart.rejected, (state) => {
+                state.status = 'failed';
+            })
+            .addCase(updateCartAsync.rejected, (state) => {
+                state.status = 'failed';
+            })
+            .addCase(addItemToCart.rejected, (state) => {
+                state.status = 'failed';
+            })
+            .addCase(deleteCartItem.rejected, (state) => {
+                state.status = 'failed';
+            });
     }
 });
 
-export const { setCartData, addProductToCart, updateProductQuantity, removeCartItem } = cartSlice.actions;
+export const { addItemState, updateProductQuantityState, updateQuantityState, removeItemState, clearCartState } = cartSlice.actions;
 
 export default cartSlice.reducer;

@@ -83,7 +83,7 @@ export const ListAddress = () => {
                                     <td className="py-2 px-4 border">{`${address.nama_jalan}, Kelurahan ${address.kelurahan}, Kecamatan ${address.kecamatan}, Kota/Kab ${address.kabupaten_kota}, Provinsi ${address.provinsi}`}</td>
                                     <td className="py-2 px-4 border">
                                         <div className="justify-center flex gap-2">
-                                            <Link to={'/account/edit-address'}>
+                                            <Link to={`/account/edit-address/${address._id}`}>
                                                 <button className="bg-blue-700 px-3 py-1 rounded-md text-white">Edit</button>
                                             </Link>
                                             <button onClick={() => handleDeleteAddress(address._id, address.name_alamat_pengiriman)} className="bg-red-700 px-3 py-1 rounded-md text-white">Hapus</button>

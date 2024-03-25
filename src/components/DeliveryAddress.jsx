@@ -3,10 +3,12 @@ import { Link } from "react-router-dom"
 import { getDeliveryAddresses } from "../app/api/deliveryAddress"
 import { useDispatch, useSelector } from "react-redux"
 import { setLoading, unsetLoading } from "../app/features/loading/loadingSlice"
+import { toggleAddress } from "../app/features/checkout/checkoutSlice"
 
 export const DeliveryAddress = () => {
     const dispatch = useDispatch()
 
+    const selectedAddress = useSelector(state => state.checkout.selectedAddress);
     const loading = useSelector(state => state.loading)
     const [deliveryAddresses, setDeliveryAddresses] = useState([])
 
@@ -16,12 +18,17 @@ export const DeliveryAddress = () => {
             const { data } = await getDeliveryAddresses()
             setDeliveryAddresses(data.data)
         } catch (err) {
-            console.error('Error fetch delivery address:', err);
+            console.error('Error fetch delivery addressses:', err);
         } finally {
             dispatch(unsetLoading())
         }
 
     }
+
+    const handleCheckboxChange = addressId => {
+        dispatch(toggleAddress(addressId));
+    };
+
     useEffect(() => {
         fetchDeliveryAddress()
     }, [])
@@ -46,12 +53,12 @@ export const DeliveryAddress = () => {
                         deliveryAddresses.length > 0 ? (
                             deliveryAddresses.map((deliveryAddress, index) => (
                                 <tr key={index}>
-                                <td className="border p-3 text-[16px] py-1 text-center">
-                                    <input type="checkbox" />
-                                </td>
-                                <td className="border p-3 text-[16px] py-1">{deliveryAddress.nama_alamat_pengiriman}</td>
-                                <td className="border p-3 text-[16px] py-1">{`${deliveryAddress.nama_jalan}, Kelurahan ${deliveryAddress.kelurahan}, Kecamatan ${deliveryAddress.kecamatan}, Kota/Kab ${deliveryAddress.kabupaten_kota}, Provinsi ${deliveryAddress.provinsi}`}</td>
-                            </tr>
+                                    <td className="border p-3 text-[16px] py-1 text-center">
+                                        <input type="radio" onChange={() => handleCheckboxChange(deliveryAddress._id)} checked={selectedAddress.includes(deliveryAddress._id)} />
+                                    </td>
+                                    <td className="border p-3 text-[16px] py-1">{deliveryAddress.nama_alamat_pengiriman}</td>
+                                    <td className="border p-3 text-[16px] py-1">{`${deliveryAddress.nama_jalan}, Kelurahan ${deliveryAddress.kelurahan}, Kecamatan ${deliveryAddress.kecamatan}, Kota/Kab ${deliveryAddress.kabupaten_kota}, Provinsi ${deliveryAddress.provinsi}`}</td>
+                                </tr>
                         ))
                         ) : (
                             <tr>
@@ -68,10 +75,10 @@ export const DeliveryAddress = () => {
             </table>
             <div className="flex gap-4 justify-between">
                 <Link to={'/cart'}>
-                    <span className='bg-blue-600 py-2 px-5 text-white rounded-md text-center cursor-pointer'>Kembali</span>
+                    <button className='bg-blue-600 py-2 px-5 text-white rounded-md text-center'>Kembali</button>
                 </Link>
                 <Link to={'/confirm-order'}>
-                    <span className='bg-green-600 py-2 px-5 text-white rounded-md text-center cursor-pointer'>Review Order</span>
+                    <button disabled={selectedAddress.length === 0} className={`${selectedAddress.length === 0 ? 'bg-green-400' : 'bg-green-600'} py-2 px-5 text-white rounded-md text-center`}>Review Order</button>
                 </Link>
             </div>
         </div>

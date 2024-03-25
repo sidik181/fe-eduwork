@@ -1,8 +1,11 @@
 import PropTypes from 'prop-types';
 import { formatPrice } from '../utils';
 import { TagIcon, ShoppingCartIcon } from '@heroicons/react/24/outline';
+import { useSelector } from 'react-redux';
 
 export const Card = ({ product, auth, updateOrAddProductToCart }) => {
+    const loadingAddCart = useSelector(state => state.cart.status)
+
     return (
         <div className="group relative">
             <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
@@ -23,7 +26,7 @@ export const Card = ({ product, auth, updateOrAddProductToCart }) => {
                 </div>
                 <p className="text-xl font-medium text-gray-700">{formatPrice(product.price)}</p>
             </div>
-            <button onClick={() => updateOrAddProductToCart(product)} className={`${auth ? 'bg-blue-800' : 'bg-gray-300 cursor-not-allowed'} h-10 w-full rounded-md mt-2 flex justify-center items-center`}>
+            <button disabled={!auth || loadingAddCart === 'loading'} onClick={() => auth && updateOrAddProductToCart(product)} className={`${auth ? 'bg-blue-800' : 'bg-gray-300 cursor-not-allowed'} h-10 w-full rounded-md mt-2 flex justify-center items-center`}>
                 <ShoppingCartIcon className="h-7 w-7 text-white" />
             </button>
         </div>

@@ -3,10 +3,11 @@ import { Link, useNavigate } from "react-router-dom"
 import logoURL from "../assets/logo.png"
 import { loginUser } from "../app/api/auth"
 import { useDispatch, useSelector } from "react-redux"
-import { userLogin } from "../app/features/auth/actions"
+import { userLogin } from "../app/features/auth/authSlice"
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { setLoading, unsetLoading } from '../app/features/loading/loadingSlice';
+import { loadCart } from "../app/features/cart/cartService"
 
 export function LoginForm() {
     const initialState = {
@@ -30,14 +31,16 @@ export function LoginForm() {
         const { data } = await loginUser(values)
         if (data.error) {
             setErrorMessage(data.message)
+            dispatch(unsetLoading())
         } else {
             const  { token, user } = data
             dispatch(userLogin({ user, token }));
+            dispatch(loadCart())
             setErrorMessage('')
             resetForm()
             navigate('/')
+            dispatch(unsetLoading())
         }
-        unsetLoading()
     }
     return (
         <div className="flex flex-1 flex-col min-h-full justify-center px-6 py-12 lg:px-8">

@@ -1,17 +1,16 @@
 import { combineReducers, applyMiddleware, compose, legacy_createStore as createStore } from 'redux'
 import {thunk} from 'redux-thunk'
 import productReducer from './features/product/reducers';
-import authReducer from './features/auth/reducers';
+import authReducer from './features/auth/authSlice';
 import loadingReducer from './features/loading/loadingSlice';
 import cartReducer from './features/cart/cartSlice';
 import checkoutReducer from './features/checkout/checkoutSlice';
 
 const preloadedState = {
-    auth: {
-        user: localStorage.getItem('auth') ? JSON.parse(localStorage.getItem('auth')) : { user: null, token: null }
-    },
+    auth:  localStorage.getItem('auth') ? JSON.parse(localStorage.getItem('auth')) : { user: null, token: null },
     cart: {
         items: JSON.parse(localStorage.getItem('cart') || '[]'),
+        status: "idle"
     }
 };
 

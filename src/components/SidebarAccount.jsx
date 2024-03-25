@@ -1,7 +1,8 @@
 import { Link, useNavigate } from "react-router-dom"
-import { userLogout } from "../app/features/auth/actions"
+import { userLogout } from "../app/features/auth/authSlice"
 import { useDispatch } from "react-redux"
 import { logoutUser } from "../app/api/auth"
+import { clearCartState } from "../app/features/cart/cartSlice"
 
 export const SidebarAccount = () => {
     const dispatch = useDispatch()
@@ -10,6 +11,7 @@ export const SidebarAccount = () => {
     const handleLogout = async () => {
         await logoutUser()
         dispatch(userLogout())
+        dispatch(clearCartState())
         navigate('/')
     }
 

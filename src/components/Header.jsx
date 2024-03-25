@@ -3,22 +3,22 @@ import logoURL from "../assets/logo.png"
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { logoutUser } from '../app/api/auth'
-import { userLogout } from '../app/features/auth/actions'
+import { userLogout } from '../app/features/auth/authSlice'
 import { useDispatch, useSelector } from 'react-redux'
+import { clearCartState } from '../app/features/cart/cartSlice'
 
 
 export const Header = () => {
-  const auth = localStorage.getItem('auth') ? JSON.parse(localStorage.getItem('auth')) : null;
+  const auth = useSelector(state => state.auth)
+  const cart = useSelector(state => state.cart.items)
 
   const [mobileMenu, setMobileMenu] = useState(false)
   const [desktopAccount, setDesktopAccount] = useState(false)
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const cartItems = JSON.parse(localStorage.getItem('cart') || '[]')
-  const cart = useSelector(state => state.cart)
-  console.log(cart.cart)
-  const totalQtyCart = cartItems.reduce((sum, item) => sum + item.qty, 0)
+
+  const totalQtyCart = cart.reduce((sum, item) => sum + item.qty, 0)
 
   const toggleAccount = () => {
     setDesktopAccount(!desktopAccount)
@@ -31,6 +31,7 @@ export const Header = () => {
   const handleLogout = async () => {
     await logoutUser()
     dispatch(userLogout())
+    dispatch(clearCartState())
     navigate('/')
   }
 
@@ -50,7 +51,7 @@ export const Header = () => {
             <ShoppingCartIcon className="cursor-pointer w-6 h-6 mr-1" />
             <span className='mr-3'>{`(${totalQtyCart})`}</span>
           </Link>
-          {!auth?.user ?
+          {!auth.user ?
             <div className='hidden md:block'>
               <Link to={'/login'}>
                 <span className='bg-blue-600 px-4 py-2 hover:bg-blue-400 rounded-md text-md font-semibold leading-6 text-white'>Log in</span>
