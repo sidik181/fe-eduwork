@@ -34,7 +34,7 @@ import { EditUser } from '../components/EditUser';
 
 import { UnAuthenticated } from '../components/UnAuthenticated';
 import { UnAuthorization } from '../components/UnAuthorization';
-import { NotFound } from '../components/NotFOund';
+import { NotFound } from '../components/NotFound';
 
 
 const AppRoutes = () => {
