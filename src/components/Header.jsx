@@ -36,7 +36,7 @@ export const Header = () => {
   }
 
   return (
-    <div className="bg-indigo-950">
+    <div className="bg-indigo-950 sticky top-0 z-50">
       <nav className='flex justify-between mx-auto p-4 items-center max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8'>
         <Link to={'/'}>
           <div>

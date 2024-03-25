@@ -10,6 +10,7 @@ import { TagCard } from "../components/TagCard";
 import { updateProductQuantityState, addItemState } from "../app/features/cart/cartSlice"
 import { ToastContainer, toast } from "react-toastify";
 import { addItemToCart, loadCart, updateCartAsync } from "../app/features/cart/cartService";
+import PaginationButton from "../components/PaginationButton";
 
 export function Home() {
     const products = useSelector(state => state.products.data)
@@ -75,7 +76,7 @@ export function Home() {
             <Header />
             <div className="bg-white text-gray-900">
                 <ToastContainer />
-                <div className="mx-auto max-w-2xl px-4 mt-5 pb-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
+                <div className="mx-auto max-w-2xl px-4 pb-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
                     <h1 className="text-2xl font-bold text-left tracking-tight text-gray-900">Daftar Produk</h1>
                     <div className="flex overflow-auto mt-5 items-center">
                         <select defaultValue='' onClick={handleCategoryChange} className="bg-white border p-1 border-gray-300 text-sm text-gray-900" name="category" id="category">
@@ -99,6 +100,7 @@ export function Home() {
                         }
                         {status === 'error' && <span className="text-black text-md">Gagal mengambil data. Silakan refresh kembali browser anda</span>}
                     </div>
+                    <PaginationButton />
                 </div>
             </div>
         </>
