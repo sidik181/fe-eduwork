@@ -46,11 +46,16 @@ export const EditUser = () => {
     const onSubmit = async values => {
         try {
             dispatch(setLoading())
-            await editUser(idUser, values)
+            await editUser(idUser, {
+                full_name: values.fullname,
+                email: values.email,
+                password: values.password,
+                role: values.role,
+            })
             toast.success(`User berhasil diedit${values.fullname}`);
             navigate('/settings/users')
         } catch (err) {
-            toast.error(`Gagal mengedit ${values.fullname}. ${err}`)
+            toast.error(`Gagal mengedit ${values.fullname}. ${err.message}`)
         } finally {
             dispatch(unsetLoading())
         }
@@ -137,7 +142,7 @@ export const EditUser = () => {
                                     type="submit"
                                     className='bg-blue-500 hover:bg-blue-700 rounded-md px-8 py-2 text-center uppercase'
                                 >
-                                    Tambah
+                                    Edit
                                 </button>
                             )
                             }

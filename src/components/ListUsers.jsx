@@ -40,7 +40,7 @@ export const ListUsers = () => {
     const fetchDataUser = async () => {
         try {
             dispatch(setLoading())
-            let { data } = await getUsers()
+            const { data } = await getUsers()
             setUsers(data)
         } catch (err) {
             console.error('Error fetch product:', err);
